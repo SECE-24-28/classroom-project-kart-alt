@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kidney Function Monitor - Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            color: #667eea;
+            font-size: 28px;
+        }
+
+        .status-badge {
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .status-testing {
+            background: #fbbf24;
+            color: #78350f;
+        }
+
+        .status-complete {
+            background: #10b981;
+            color: white;
+        }
+
+        .status-idle {
+            background: #e5e7eb;
+            color: #6b7280;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #1f2937;
+            margin-bottom: 20px;
+            font-size: 20px;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e5e7eb;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .progress-text {
+            margin-top: 10px;
+            text-align: center;
+            font-size: 18px;
+            color: #4b5563;
+        }
+
+        .sensor-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .sensor-item {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .sensor-label {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 5px;
+        }
+
+        .sensor-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .sensor-unit {
+            font-size: 14px;
+            color: #9ca3af;
+            margin-left: 5px;
+        }
+
+        .result-card {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .result-card.warning {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+
+        .result-card.danger {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        }
+
+        .egfr-value {
+            font-size: 72px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .egfr-label {
+            font-size: 18px;
+            opacity: 0.9;
+        }
+
+        .status-text {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .confidence {
+            font-size: 16px;
+            opacity: 0.8;
+            margin-top: 10px;
+        }
+
+        .recommendations {
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .recommendations h3 {
+            color: #065f46;
+            margin-bottom: 10px;
+        }
+
+        .recommendations p {
+            color: #047857;
+            line-height: 1.6;
+        }
+
+        .recommendations ul {
+            margin-top: 15px;
+            padding-left: 20px;
+        }
+
+        .recommendations li {
+            color: #047857;
+            margin: 8px 0;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #1f2937;
+        }
+
+        .history-item {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #667eea;
+        }
+
+        .history-date {
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .history-egfr {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1f2937;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .pulsing {
+            animation: pulse 2s infinite;
+        }
+
+        .timer {
+            font-size: 48px;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>🫘 Kidney Function Monitor</h1>
+                <p style="color: #6b7280; margin-top: 5px;">Real-time kidney health assessment</p>
+            </div>
+            <div class="status-badge" id="statusBadge">● IDLE</div>
+        </div>
+
+        <div id="dashboardView">
+            <!-- This section shows during testing -->
+        </div>
+
+        <div id="resultsView" style="display: none;">
+            <!-- This section shows after test completes -->
+        </div>
+    </div>
+
+    <script>
+        let currentView = 'idle';
+        let progress = 0;
+        let timeRemaining = 180;
+        let interval;
+
+        function showIdleView() {
+            document.getElementById('dashboardView').innerHTML = `
+                <div class="card full-width" style="text-align: center; padding: 60px;">
+                    <h2 style="border: none; font-size: 24px; margin-bottom: 20px;">Ready to Start Test</h2>
+                    <p style="color: #6b7280; margin-bottom: 30px; font-size: 18px;">
+                        Place the sensor on your forearm and press start on the device
+                    </p>
+                    <button class="btn btn-primary" onclick="startDemo()">▶ Start Demo Test</button>
+                </div>
+            `;
+            document.getElementById('statusBadge').className = 'status-badge status-idle';
+            document.getElementById('statusBadge').textContent = '● IDLE';
+        }
+
+        function showTestingView() {
+            document.getElementById('dashboardView').innerHTML = `
+                <div class="card full-width">
+                    <h2>Test in Progress</h2>
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill" style="width: 0%">0%</div>
+                        </div>
+                        <div class="progress-text">
+                            <span id="packetCount">0 / 180</span> packets received
+                        </div>
+                    </div>
+                    <div class="timer pulsing" id="timer">3:00</div>
+                    <p style="text-align: center; color: #6b7280;">Please keep the sensor steady on your arm</p>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h2>Bioimpedance</h2>
+                        <div class="sensor-grid">
+                            <div class="sensor-item">
+                                <div class="sensor-label">1 kHz</div>
+                                <div class="sensor-value" id="bio1k">--</div>
+                            </div>
+                            <div class="sensor-item">
+                                <div class="sensor-label">10 kHz</div>
+                                <div class="sensor-value" id="bio10k">--</div>
+                            </div>
+                            <div class="sensor-item">
+                                <div class="sensor-label">100 kHz</div>
+                                <div class="sensor-value" id="bio100k">--</div>
+                            </div>
+                            <div class="sensor-item">
+                                <div class="sensor-label">200 kHz</div>
+                                <div class="sensor-value" id="bio200k">--</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Vital Signs</h2>
+                        <div class="sensor-grid">
+                            <div class="sensor-item">
+                                <div class="sensor-label">Heart Rate</div>
+                                <div class="sensor-value" id="heartRate">--<span class="sensor-unit">BPM</span></div>
+                            </div>
+                            <div class="sensor-item">
+                                <div class="sensor-label">Temperature</div>
+                                <div class="sensor-value" id="temp">--<span class="sensor-unit">°C</span></div>
+                            </div>
+                            <div class="sensor-item">
+                                <div class="sensor-label">Pressure</div>
+                                <div class="sensor-value" id="pressure">--<span class="sensor-unit">kPa</span></div>
+                            </div>
+                            <div class="sensor-item">
+                                <div class="sensor-label">Battery</div>
+                                <div class="sensor-value" id="battery">--<span class="sensor-unit">%</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Optical Sensors</h2>
+                        <div class="sensor-grid">
+                            <div class="sensor-item">
+                                <div class="sensor-label">Red Light</div>
+                                <div class="sensor-value" id="opticalRed">--</div>
+                            </div>
+                            <div class="sensor-item">
+                                <div class="sensor-label">Infrared</div>
+                                <div class="sensor-value" id="opticalIR">--</div>
+                            </div>
+                            <div class="sensor-item">
+                                <div class="sensor-label">Green Light</div>
+                                <div class="sensor-value" id="opticalGreen">--</div>
+                            </div>
+                            <div class="sensor-item">
+                                <div class="sensor-label">Motion</div>
+                                <div class="sensor-value" id="motion">--<span class="sensor-unit">g</span></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Test Information</h2>
+                        <div class="sensor-item" style="margin-bottom: 10px;">
+                            <div class="sensor-label">Device ID</div>
+                            <div class="sensor-value" style="font-size: 18px;">PROTO_001</div>
+                        </div>
+                        <div class="sensor-item">
+                            <div class="sensor-label">Test ID</div>
+                            <div class="sensor-value" style="font-size: 18px;" id="testId">test_demo</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('statusBadge').className = 'status-badge status-testing';
+            document.getElementById('statusBadge').textContent = '● TESTING';
+        }
+
+        function showResultsView(egfr, status, stage, confidence, riskLevel) {
+            let cardClass = 'result-card';
+            if (egfr < 60) cardClass += ' warning';
+            if (egfr < 30) cardClass += ' danger';
+
+            document.getElementById('resultsView').innerHTML = `
+                <div class="${cardClass}">
+                    <div class="egfr-label">Your eGFR Score</div>
+                    <div class="egfr-value">${egfr}</div>
+                    <div class="egfr-label">mL/min/1.73m²</div>
+                    <div class="status-text">${status} - ${stage}</div>
+                    <div class="confidence">Confidence: ${(confidence * 100).toFixed(0)}% | Risk Level: ${riskLevel}</div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="card">
+                        <h2>Understanding Your Results</h2>
+                        <div style="line-height: 1.8; color: #4b5563;">
+                            <p style="margin-bottom: 15px;"><strong>What is eGFR?</strong></p>
+                            <p>eGFR (estimated Glomerular Filtration Rate) measures how well your kidneys filter blood. Normal range is 90-120 mL/min.</p>
+                            <hr style="margin: 20px 0; border: none; border-top: 1px solid #e5e7eb;">
+                            <p><strong>Your Stage:</strong></p>
+                            <ul style="padding-left: 20px; margin-top: 10px;">
+                                <li>Stage 1 (90+): Normal kidney function</li>
+                                <li>Stage 2 (60-89): Mildly reduced</li>
+                                <li>Stage 3 (30-59): Moderately reduced</li>
+                                <li>Stage 4 (15-29): Severely reduced</li>
+                                <li>Stage 5 (<15): Kidney failure</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Recommendations</h2>
+                        <div class="recommendations">
+                            <h3>✓ Primary Recommendation</h3>
+                            <p>${egfr >= 90 ? 'Your kidney function is normal. Continue with regular health check-ups and maintain a healthy lifestyle.' : egfr >= 60 ? 'Your kidney function is mildly reduced. Monitor your health and consult your doctor.' : 'Your kidney function shows significant reduction. Please consult a nephrologist soon.'}</p>
+                        </div>
+                        <div class="recommendations">
+                            <h3>💡 Lifestyle Tips</h3>
+                            <ul>
+                                <li>Stay well hydrated (8-10 glasses of water daily)</li>
+                                <li>Maintain a balanced diet low in sodium</li>
+                                <li>Exercise regularly (30 minutes daily)</li>
+                                <li>Monitor blood pressure and blood sugar</li>
+                                <li>Avoid excessive use of NSAIDs</li>
+                            </ul>
+                        </div>
+                        <div style="background: #dbeafe; padding: 15px; border-radius: 10px; margin-top: 15px;">
+                            <strong>Next Test:</strong> ${egfr >= 60 ? '7 days' : '3 days'}
+                        </div>
+                    </div>
+
+                    <div class="card full-width">
+                        <h2>Previous Tests</h2>
+                        <div class="history-item">
+                            <div>
+                                <div class="history-date">Dec 10, 2024 - 2:30 PM</div>
+                                <div style="font-size: 14px; color: #6b7280;">Stage 1 - Normal</div>
+                            </div>
+                            <div class="history-egfr">88.5</div>
+                        </div>
+                        <div class="history-item">
+                            <div>
+                                <div class="history-date">Dec 3, 2024 - 9:15 AM</div>
+                                <div style="font-size: 14px; color: #6b7280;">Stage 1 - Normal</div>
+                            </div>
+                            <div class="history-egfr">91.2</div>
+                        </div>
+                        <div class="history-item">
+                            <div>
+                                <div class="history-date">Nov 26, 2024 - 4:45 PM</div>
+                                <div style="font-size: 14px; color: #6b7280;">Stage 1 - Normal</div>
+                            </div>
+                            <div class="history-egfr">87.8</div>
+                        </div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button class="btn btn-secondary" onclick="startDemo()">🔄 Run Another Test</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('dashboardView').style.display = 'none';
+            document.getElementById('resultsView').style.display = 'block';
+            document.getElementById('statusBadge').className = 'status-badge status-complete';
+            document.getElementById('statusBadge').textContent = '● COMPLETE';
+        }
+
+        function updateSensorData() {
+            // Simulate real-time sensor updates
+            document.getElementById('bio1k').textContent = (450 + Math.random() * 10).toFixed(1);
+            document.getElementById('bio10k').textContent = (380 + Math.random() * 10).toFixed(1);
+            document.getElementById('bio100k').textContent = (320 + Math.random() * 10).toFixed(1);
+            document.getElementById('bio200k').textContent = (290 + Math.random() * 10).toFixed(1);
+            document.getElementById('heartRate').innerHTML = (70 + Math.floor(Math.random() * 10)) + '<span class="sensor-unit">BPM</span>';
+            document.getElementById('temp').innerHTML = (36.5 + Math.random() * 0.5).toFixed(1) + '<span class="sensor-unit">°C</span>';
+            document.getElementById('pressure').innerHTML = (25 + Math.random() * 2).toFixed(1) + '<span class="sensor-unit">kPa</span>';
+            document.getElementById('battery').innerHTML = (85 - progress / 10).toFixed(0) + '<span class="sensor-unit">%</span>';
+            document.getElementById('opticalRed').textContent = (0.75 + Math.random() * 0.1).toFixed(2);
+            document.getElementById('opticalIR').textContent = (0.62 + Math.random() * 0.1).toFixed(2);
+            document.getElementById('opticalGreen').textContent = (0.68 + Math.random() * 0.1).toFixed(2);
+            document.getElementById('motion').innerHTML = (0.01 + Math.random() * 0.05).toFixed(2) + '<span class="sensor-unit">g</span>';
+        }
+
+        function startDemo() {
+            progress = 0;
+            timeRemaining = 180;
+            showTestingView();
+            
+            interval = setInterval(() => {
+                progress += 1;
+                timeRemaining -= 1;
+                
+                const packets = Math.floor((progress / 100) * 180);
+                document.getElementById('progressFill').style.width = progress + '%';
+                document.getElementById('progressFill').textContent = progress + '%';
+                document.getElementById('packetCount').textContent = packets + ' / 180';
+                
+                const mins = Math.floor(timeRemaining / 60);
+                const secs = timeRemaining % 60;
+                document.getElementById('timer').textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+                
+                updateSensorData();
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        // Simulate ML API processing
+                        const egfr = 85.3;
+                        showResultsView(egfr, 'Normal Kidney Function', 'Stage 1', 0.92, 'Low');
+                    }, 2000);
+                }
+            }, 180); // Speed up demo (180ms instead of 1000ms)
+        }
+
+        // Initialize
+        showIdleView();
+    </script>
+</body>
+</html>

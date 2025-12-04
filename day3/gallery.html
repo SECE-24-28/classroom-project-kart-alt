@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Photo Gallery</title>
+
+    <style>
+        body {
+            font-family: cursive;
+            margin: 0;
+            padding: 100px;
+            background: lavenderblush;
+        }
+
+        h1 {
+
+            text-align: center;
+            margin-bottom: 100px;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 50px;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            transition: transform 0.3s;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.05);
+        }
+        .caption {
+            margin-top: 8px;
+            font-size: 16px;
+            color: #333;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Meow Gallery🐾</h1>
+
+    <div class="gallery">
+        <!-- <div class="photo-box">
+            <img src="sunsrise.jpg" alt="Photo 1">
+            <div class="caption">London Bridge</div>
+        </div> -->
+        <div class="photo-box">
+            <img src="cat.jpg" alt="Photo 1">
+            <div class="caption">Hiii!!</div>
+        </div>
+        <div class="photo-box">
+            <img src="cutie.jpg" alt="Photo 1">
+            <div class="caption">Meoww</div>
+        </div>
+        <div class="photo-box">
+            <img src="kitty.jpg" alt="Photo 1">
+            <div class="caption">Hehehehehe</div>
+        </div>
+        <div class="photo-box">
+            <img src="Love.jpg" alt="Photo 1">
+            <div class="caption">Meow❤️</div>
+        </div>
+        <div class="photo-box">
+            <img src="duckie.jpg" alt="Photo 1">
+            <div class="caption">What's up?</div>
+        </div>
+        <div class="photo-box">
+            <img src="xmas.jpg" alt="Photo 1">
+            <div class="caption">Meoowwwy xmas🎄</div>
+        </div>
+        <div class="photo-box">
+            <img src="ragdoll.jpg" alt="Photo 1">
+            <div class="caption">nooo!!</div>
+        </div>
+        <!-- <div class="photo-box">
+            <img src="angryCat.jpg" alt="Photo 1">
+            <div class="caption">What did I say??</div>
+        </div> -->
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Kidney Monitor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 70px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        h1 {
+            color: #667eea;
+            font-size: 32px;
+            margin-bottom: 10px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 35px;
+            font-size: 15px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #4b5563;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .login-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 25px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .demo-info {
+            background: #f3f4f6;
+            padding: 18px;
+            border-radius: 10px;
+            margin-top: 25px;
+            font-size: 13px;
+            color: #6b7280;
+            text-align: center;
+            line-height: 1.8;
+        }
+
+        .demo-info strong {
+            color: #667eea;
+            font-size: 14px;
+        }
+
+        .demo-info code {
+            background: white;
+            padding: 3px 8px;
+            border-radius: 5px;
+            color: #667eea;
+            font-weight: 600;
+            font-family: 'Courier New', monospace;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .remember-me input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .forgot-password a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .forgot-password a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .login-box {
+                padding: 30px 25px;
+            }
+
+            .logo {
+                font-size: 60px;
+            }
+
+            h1 {
+                font-size: 26px;
+            }
+
+            input {
+                padding: 12px;
+            }
+
+            .login-btn {
+                padding: 13px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <!-- Logo -->
+        <div class="logo">🫘</div>
+
+        <!-- Title -->
+        <h1>Kidney Monitor</h1>
+        <p class="subtitle">Real-time kidney health assessment</p>
+
+        <!-- Login Form -->
+        <form action="index.html" method="get">
+            <!-- Username -->
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input 
+                    type="text" 
+                    id="username" 
+                    name="username"
+                    placeholder="Enter your username"
+                >
+            </div>
+
+            <!-- Password -->
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password"
+                    placeholder="Enter your password"
+                >
+            </div>
+
+            <!-- Remember Me -->
+            <label class="remember-me">
+                <input type="checkbox" id="remember">
+                <span>Remember me</span>
+            </label>
+
+            <!-- Login Button -->
+            <button type="submit" class="login-btn">
+                🔐 Login
+            </button>
+        </form>
+
+        <!-- Forgot Password -->
+        <div class="forgot-password">
+            <a href="#">Forgot password?</a>
+        </div>
+
+        <!-- Demo Info -->
+        <div class="demo-info">
+            <strong>🚀 Demo Access</strong><br>
+            Username: <code>demo</code><br>
+            Password: <code>demo123</code><br>
+            <span style="font-size: 12px; color: #9ca3af; margin-top: 8px; display: block;">
+                (Any credentials will work for demo)
+            </span>
+        </div>
+    </div>
+</body>
+</html>
